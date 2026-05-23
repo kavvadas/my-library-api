@@ -16,7 +16,7 @@ class BookCreate(BookBase):
     pass
 
 class BookDelete(BaseModel):
-    id: int
+    pass
 
 class BookUpdate(BaseModel):
     id: int
