@@ -17,11 +17,15 @@ router = APIRouter(
 
 @router.post("/", response_model=BookResponse, status_code=status.HTTP_201_CREATED)
 def create_book(book: BookCreate, db: Session = Depends(get_db)):
-    book = Book(**book.model_dump())
-    db.add(book)
+    existing_book = db.query(Book).filter(Book.isbn == book.isbn).first()
+    if existing_book:
+        raise HTTPException(status_code=400, detail="Book with this ISBN already exists")
+    db_book = Book(**book.model_dump())
+    db.add(db_book)
     db.commit()
-    db.refresh(book)
-    return book
+    db.refresh(db_book)
+
+    return db_book
 
 @router.get("/{book_id}", response_model=BookResponse)
 def get_book(book_id: int, db: Session = Depends(get_db)):
