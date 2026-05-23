@@ -63,7 +63,7 @@ docker compose run --rm test
 
 ## Example request 
 
-``bash
+```bash
 curl -X POST "http://localhost:8000/books/" \
 -H "Content-Type: application/json" \
 -H "X-API-Key: test_api_key" \
