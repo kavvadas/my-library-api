@@ -1,6 +1,6 @@
 from fastapi import Depends, HTTPException, status, APIRouter
 from sqlalchemy.orm import Session
-from sqlalchemy import _or_
+from sqlalchemy import or_
 
 
 from app.database import get_db
@@ -36,7 +36,7 @@ def get_books(page: int = 1, size: int = 10, search: str | None = None, db: Sess
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Page and size must be positive integers")
     query = db.query(Book).order_by(Book.id)
     if search:
-        query = query.filter(_or_(
+        query = query.filter(or_(
             Book.title.ilike(f"%{search}%"),
             Book.author.ilike(f"%{search}%")
         ))
@@ -62,3 +62,5 @@ def delete_book(book_id: int, db: Session = Depends(get_db)):
     db.delete(book)
     db.commit()
     return None
+
+

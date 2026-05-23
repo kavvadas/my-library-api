@@ -1,5 +1,6 @@
 from pydantic import BaseModel, ConfigDict
 from enum import Enum
+from typing import Optional
 
 class BookStatus(str, Enum):
     available = "available"
@@ -19,12 +20,11 @@ class BookDelete(BaseModel):
     pass
 
 class BookUpdate(BaseModel):
-    id: int
-    title: str | None = None
-    author: str | None = None
-    isbn: str | None = None
-    publication_year: int | None = None
-    status: BookStatus | None = None
+    title: Optional[str] = None
+    author: Optional[str] = None
+    isbn: Optional[str] = None
+    publication_year: Optional[int] = None
+    status: Optional[str] = None
 
 class BookResponse(BookBase):
     id: int
