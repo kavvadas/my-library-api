@@ -13,6 +13,22 @@ REST API for library book management using FastAPI and PostgreSQL.
 - Pytest tests
 
 ---
+## Φ Improvements and new features (v0.2.0)
+
+- User management using JWT token and bcrypt
+- Borrow book logic system
+
+---
+
+### TODO 
+
+* login endpoints
+* token creation JWT
+* password hashin (bcrypt)
+* install dependencies
+* apply current_user to borrow router
+
+---
 
 ## Setup
 
