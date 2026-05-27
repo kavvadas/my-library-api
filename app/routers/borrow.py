@@ -10,7 +10,7 @@ router = APIRouter(
     tags=["borrow"],
     dependencies=[Depends(verify_api_key)])
 
-@router.post("/{book_id}",response_model=BorrowRecordResponse)
+@router.post("/{book_id}",response_model=BorrowRecordResponse, status_code=status.HTTP_201_CREATED)
 def borrow_book(book_id: int,user_id: int, db: Session = Depends(get_db)):
     book = db.query(Book).filter(Book.id == book_id).first()
     if not book:
@@ -22,7 +22,7 @@ def borrow_book(book_id: int,user_id: int, db: Session = Depends(get_db)):
     active = db.query(BorrowRecord).filter(
         BorrowRecord.user_id == user_id,
         BorrowRecord.book_id == book_id,
-        BorrowRecord.return_date == None
+        BorrowRecord.return_date.is_(None)
     ).first()
 
     if active:
@@ -66,11 +66,11 @@ def return_book(borrow_id: int, db: Session = Depends(get_db)):
     db.refresh(borrow)
     return borrow
 
-@router.get("/",response_class=BorrowRecordResponse)
+@router.get("/",response_model=list[BorrowRecordResponse])
 def get_borrows(db: Session = Depends(get_db)):
     return db.query(BorrowRecord).all()
 
-@router.get("/user/{user_id}",response_model=BorrowRecordResponse)
+@router.get("/user/{user_id}",response_model=list[BorrowRecordResponse])
 def get_user_borrows(user_id: int, db: Session = Depends(get_db)):
     return ( db.query(BorrowRecord).filter(BorrowRecord.user_id == user_id).all() )
 

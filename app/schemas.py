@@ -46,6 +46,7 @@ class UserCreate(UserBase):
 
 class UserResponse(UserBase):
     id: int
+    username: str
     role: UserRole  
     model_config = ConfigDict(from_attributes=True)
 

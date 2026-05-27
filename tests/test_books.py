@@ -22,8 +22,8 @@ def test_create_book(client):
         "title": "Test Book",
         "author": "Test Author",
         "isbn": unique_isbn(),
-        "publication_year": 2020,
-        "status": "available"
+        "publication_year": 2020
+        
     }, headers=HEADERS)
     assert response.status_code == 201
     data = response.json()

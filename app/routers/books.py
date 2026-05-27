@@ -37,7 +37,8 @@ def get_book(book_id: int, db: Session = Depends(get_db)):
 @router.get("/", response_model=list[BookResponse])
 def get_books(page: int = 1, size: int = 10, search: str | None = None, db: Session = Depends(get_db)):
     if page < 1 or size < 1:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Page and size must be positive integers")
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST
+                            , detail="Page and size must be positive integers")
     query = db.query(Book).order_by(Book.id)
     if search:
         query = query.filter(or_(
