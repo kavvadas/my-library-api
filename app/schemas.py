@@ -28,6 +28,7 @@ class BookUpdate(BaseModel):
 
 class BookResponse(BookBase):
     id: int
+    status: BookStatus
     model_config = ConfigDict(from_attributes=True)
 
 class UserRole(str, Enum):

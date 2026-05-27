@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String,ForeignKey, DateTime
+from sqlalchemy import Column, Integer, String,ForeignKey, DateTime, Enum as SQLEnum
 from sqlalchemy.orm import relationship
 from app.database import Base
 from datetime import datetime, timezone
@@ -22,7 +22,7 @@ class Book(Base):
     author = Column(String, index=True, nullable=False)
     isbn = Column(String, unique=True, index=True, nullable=False)
     publication_year = Column(Integer, index=True, nullable=False)
-    status = Column(BookStatus,  nullable=False, default=BookStatus.available)
+    status = Column(SQLEnum(BookStatus),  nullable=False, default=BookStatus.available)
     borrow_records = relationship("BorrowRecord", back_populates="book", cascade="all, delete-orphan")
 
 class User(Base):
@@ -32,7 +32,7 @@ class User(Base):
     username = Column(String, unique=True, index=True, nullable=False)
     email = Column(String, unique=True, index=True, nullable=False)
     hashed_password = Column(String, nullable=False)
-    role = Column(UserRole, index=True, nullable=False, default=UserRole.user)
+    role = Column(SQLEnum(UserRole), index=True, nullable=False, default=UserRole.user)
     borrow_records = relationship("BorrowRecord", back_populates="user", cascade="all, delete-orphan")
 
 class BorrowRecord(Base):

@@ -67,49 +67,48 @@ def test_get_books_pagination(client):
     data = response.json()
     assert len(data) == 5
 
-    def test_get_books_search_by_title(client):
-        client.post("/books/", json={
-            "title": "Unique Title",
-            "author": "Test Author",
-            "isbn": unique_isbn(),
-            "publication_year": 2020,
-            "status": "available"
-        }, headers=HEADERS)
+def test_get_books_search_by_title(client):
+    client.post("/books/", json={
+        "title": "Unique Title",
+        "author": "Test Author",
+        "isbn": unique_isbn(),
+        "publication_year": 2020,
+        "status": "available"
+    }, headers=HEADERS)
+    client.post("/books/", json={
+        "title": "Unique Title",
+        "author": "Another Author",
+        "isbn": unique_isbn(),
+        "publication_year": 2020,
+        "status": "available"
+    }, headers=HEADERS)
+    response = client.get("/books/?search=Unique", headers=HEADERS)
+    assert response.status_code == 200
+    data = response.json()
+    assert len(data) == 2
+    assert data[0]["title"] == "Unique Title"
 
-        client.post("/books/", json={
-            "title": "Unique Title",
-            "author": "Another Author",
-            "isbn": unique_isbn(),
-            "publication_year": 2020,
-            "status": "available"
-        }, headers=HEADERS)
-        response = client.get("/books/?search=Unique", headers=HEADERS)
-        assert response.status_code == 200
-        data = response.json()
-        assert len(data) == 2
-        assert data[0]["title"] == "Unique Title"
-
-    def test_get_books_search_by_author(client):
-        client.post("/books/", json={
-            "title": "Test Book",
-            "author": "Unique Author",
-            "isbn": unique_isbn(),
-            "publication_year": 2020,
-            "status": "available"
-        }, headers=HEADERS)
-        
-        client.post("/books/", json={
-            "title": "Another Book",
-            "author": "Unique Author",
-            "isbn": unique_isbn(),  
-            "publication_year": 2020,
-            "status": "available"
-        }, headers=HEADERS)
-        response = client.get("/books/?search=Unique", headers=HEADERS)
-        assert response.status_code == 200
-        data = response.json()
-        assert len(data) == 2
-        assert data[0]["author"] == "Unique Author"
+def test_get_books_search_by_author(client):
+    client.post("/books/", json={
+        "title": "Test Book",
+        "author": "Unique Author",
+        "isbn": unique_isbn(),
+        "publication_year": 2020,
+        "status": "available"
+    }, headers=HEADERS)
+    
+    client.post("/books/", json={
+        "title": "Another Book",
+        "author": "Unique Author",
+        "isbn": unique_isbn(),  
+        "publication_year": 2020,
+        "status": "available"
+    }, headers=HEADERS)
+    response = client.get("/books/?search=Unique", headers=HEADERS)
+    assert response.status_code == 200
+    data = response.json()
+    assert len(data) == 2
+    assert data[0]["author"] == "Unique Author"
 
 def test_get_books_invalid_pagination(client):
     response = client.get("/books/?page=0&size=10", headers=HEADERS)
