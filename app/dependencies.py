@@ -1,4 +1,4 @@
-from fastapi import Header, HTTPException, Depends,status
+from fastapi import Header, HTTPException, Depends
 from app.config import settings
 from sqlalchemy.orm import Session
 

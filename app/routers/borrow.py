@@ -1,7 +1,7 @@
 from fastapi import Depends, HTTPException, status, APIRouter
 from sqlalchemy.orm import Session
 from app.database import get_db
-from app.dependencies import verify_api_key
+from app.dependencies import verify_api_key, get_current_user
 from app.models import Book, BorrowRecord, BookStatus
 from app.schemas import BorrowRecordResponse
 from datetime import datetime,timezone
@@ -11,7 +11,7 @@ router = APIRouter(
     dependencies=[Depends(verify_api_key)])
 
 @router.post("/{book_id}",response_model=BorrowRecordResponse, status_code=status.HTTP_201_CREATED)
-def borrow_book(book_id: int,user_id: int, db: Session = Depends(get_db)):
+def borrow_book(book_id: int,current_user = Depends(get_current_user), db: Session = Depends(get_db)):
     book = db.query(Book).filter(Book.id == book_id).first()
     if not book:
         raise HTTPException(status_code=404, detail="Book not found")
@@ -20,7 +20,7 @@ def borrow_book(book_id: int,user_id: int, db: Session = Depends(get_db)):
     
 
     active = db.query(BorrowRecord).filter(
-        BorrowRecord.user_id == user_id,
+        BorrowRecord.user_id == current_user.id,
         BorrowRecord.book_id == book_id,
         BorrowRecord.return_date.is_(None)
     ).first()
@@ -32,7 +32,7 @@ def borrow_book(book_id: int,user_id: int, db: Session = Depends(get_db)):
         )
     
     borrow = BorrowRecord(
-        user_id = user_id,
+        user_id = current_user.id,
         book_id = book_id,
         borrow_date = datetime.now(timezone.utc),
         return_date = None
