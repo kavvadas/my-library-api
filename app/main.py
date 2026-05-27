@@ -4,6 +4,7 @@ from app.database import engine, Base
 from app.routers.books import router as books_router
 from app.routers.borrow import router as borrow_router
 from app.routers.users import router as users_router
+from app.routers.auth import router as auth_router
 
 import time
 from sqlalchemy.exc import OperationalError
@@ -36,3 +37,4 @@ def root():
 app.include_router(books_router)
 app.include_router(borrow_router)
 app.include_router(users_router)
+app.include_router(auth_router)

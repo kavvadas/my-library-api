@@ -2,10 +2,12 @@ from fastapi import Depends, HTTPException, status, APIRouter
 from sqlalchemy.orm import Session
 from sqlalchemy import or_
 from app.database import get_db
-from app.dependencies import verify_api_key
+from app.dependencies import verify_api_key, get_current_user
 from app.models import User,UserRole
 from app.schemas import UserResponse, UserCreate, UserUpdate
 from app.utils.security import hash_password
+
+
 
 router = APIRouter(
     prefix="/user",
@@ -47,6 +49,10 @@ def get_users(page: int = 1, size: int = 10, search: str | None = None, db: Sess
     users = query.offset((page-1)*size).limit(size).all()
     return users
         
+@router.get("/me")
+def me(current_user = Depends(get_current_user)):
+    return current_user
+
 @router.get("/{user_id}",response_model=UserResponse)
 def get_user(user_id: int, db: Session = Depends(get_db)):
     user = db.query(User).filter(User.id == user_id).first()
@@ -90,3 +96,5 @@ def delete_user(user_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
     db.delete(user)
     db.commit()
+
+

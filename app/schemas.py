@@ -75,7 +75,7 @@ class BorrowRecordResponse(BorrowRecordBase):
     model_config = ConfigDict(from_attributes=True)
 
 class LoginRequest(BaseModel):
-    email: EmailStr
+    username: str
     password: str
 
 class TokenResponse(BaseModel):
