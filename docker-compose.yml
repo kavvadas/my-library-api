@@ -14,6 +14,7 @@ services:
       retries: 10
 
   api:
+    image: kavvadas/my-library-api:${APP_VERSION}
     build: .
     command: uvicorn app.main:app --host 0.0.0.0 --port 8000
     depends_on:
@@ -24,6 +25,7 @@ services:
     env_file:
       - .env
   test:
+    image: kavvadas/my-library-api:${APP_VERSION}
     build: .
     command: pytest
     depends_on:

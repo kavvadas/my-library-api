@@ -7,4 +7,5 @@ pytest
 pydantic
 pydantic[email]
 pydantic-settings
+passlib[argon2]
 httpx
