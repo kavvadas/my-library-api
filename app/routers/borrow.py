@@ -4,11 +4,13 @@ from app.database import get_db
 from app.dependencies import verify_api_key, get_current_user
 from app.models import Book, BorrowRecord, BookStatus
 from app.schemas import BorrowRecordResponse
-from datetime import datetime,timezone
+from datetime import datetime,timezone, timedelta
 router = APIRouter(
     prefix="/borrow",
     tags=["borrow"],
     dependencies=[Depends(verify_api_key)])
+
+MAX_BORROW_DAYS = 14
 
 @router.post("/{book_id}",response_model=BorrowRecordResponse, status_code=status.HTTP_201_CREATED)
 def borrow_book(book_id: int,current_user = Depends(get_current_user), db: Session = Depends(get_db)):
@@ -35,6 +37,7 @@ def borrow_book(book_id: int,current_user = Depends(get_current_user), db: Sessi
         user_id = current_user.id,
         book_id = book_id,
         borrow_date = datetime.now(timezone.utc),
+        due_date = datetime.now(timezone.utc) + timedelta(days=14),
         return_date = None
     )
 
@@ -73,5 +76,12 @@ def get_borrows(db: Session = Depends(get_db)):
 @router.get("/user/{user_id}",response_model=list[BorrowRecordResponse])
 def get_user_borrows(user_id: int, db: Session = Depends(get_db)):
     return ( db.query(BorrowRecord).filter(BorrowRecord.user_id == user_id).all() )
+
+
+
+@router.get("/overdue", response_model=list[BorrowRecordResponse])
+def overdue_books(db: Session = Depends(get_db)):
+    return db.query(BorrowRecord).filter(BorrowRecord.return_date.is_(None), BorrowRecord.due_date<datetime.now(timezone.utc)).all()
+
 
 

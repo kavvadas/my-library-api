@@ -41,9 +41,12 @@ class BorrowRecord(Base):
     id = Column(Integer, primary_key=True, index=True,nullable=False)
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     book_id = Column(Integer, ForeignKey("books.id"), nullable=False)
+
     borrow_date = Column(DateTime, default=lambda: datetime.now(timezone.utc), nullable=False)
+    due_date = Column(DateTime,nullable=True)
     return_date = Column(DateTime, nullable=True)
 
+    
     user = relationship("User", back_populates="borrow_records")
     book = relationship("Book", back_populates="borrow_records")
 
