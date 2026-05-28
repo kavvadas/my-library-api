@@ -66,14 +66,25 @@ class BorrowRecordCreate(BorrowRecordBase):
 class BorrowRecordReturn(BorrowRecordBase):
     return_date: datetime
 
-class BorrowRecordResponse(BorrowRecordBase):
+class BorrowRecordResponse(BaseModel):
     id: int
-    user_id: int
     borrow_date: datetime
     due_date: datetime
     return_date: Optional[datetime] = None
     book: BookResponse
+    user: UserResponse
+
     model_config = ConfigDict(from_attributes=True)
+
+class BorrowRecordUserResponse(BaseModel):
+    id:int
+    borrow_date: datetime
+    due_date: datetime
+    return_date: Optional[datetime] = None
+    book: BookResponse
+
+    model_config = ConfigDict(from_attributes=True)
+
 
 class LoginRequest(BaseModel):
     username: str

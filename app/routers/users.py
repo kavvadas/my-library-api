@@ -4,7 +4,7 @@ from sqlalchemy import or_
 from app.database import get_db
 from app.dependencies import verify_api_key, get_current_user
 from app.models import User,UserRole, BorrowRecord
-from app.schemas import UserResponse, UserCreate, UserUpdate, BorrowRecordResponse
+from app.schemas import UserResponse, UserCreate, UserUpdate, BorrowRecordUserResponse
 from app.utils.security import hash_password
 
 
@@ -97,7 +97,7 @@ def delete_user(user_id: int, db: Session = Depends(get_db)):
     db.delete(user)
     db.commit()
 
-@router.get("/me/borrows",response_model=list[BorrowRecordResponse])
+@router.get("/me/borrows",response_model=list[BorrowRecordUserResponse])
 def get_my_borrows(db: Session = Depends(get_db), current_user = Depends(get_current_user)):
     return db.query(BorrowRecord).filter(BorrowRecord.return_date.is_(None), BorrowRecord.user_id == current_user.id).all()
 
