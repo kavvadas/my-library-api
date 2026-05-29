@@ -38,6 +38,7 @@ Create `.env` file:
 DATABASE_URL = "postgresql://postgres:postgres@db:5432/library_db"
 API_KEY = "test_api_key"
 VERSION = "v0.2.0"
+JWT = "test_jwt_key"
 ```
 
 Run:
