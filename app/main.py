@@ -35,6 +35,6 @@ def root():
     return {"message": "Welcome to My Library API!"}
 
 app.include_router(books_router)
-app.include_router(borrow_router)
-app.include_router(users_router)
 app.include_router(auth_router)
+app.include_router(users_router)
+app.include_router(borrow_router)
