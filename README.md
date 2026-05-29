@@ -15,16 +15,16 @@ REST API for library book management using FastAPI and PostgreSQL.
 ---
 ## Improvements and new features (v0.2.0)
 
-- User management using JWT token and bcrypt
+- User management using JWT token authorization and argon2
 - Borrow book logic system
 
 ---
 
-### TODO 
+### Done 
 
 * login endpoints
 * token creation JWT
-* password hashin (bcrypt)
+* password hashin (argon2)
 * install dependencies
 * apply current_user to borrow router
 
